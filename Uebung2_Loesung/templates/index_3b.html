@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <!--
+    Autor:innen:
+    Irene Antolín Pérez
+    Philipp Michtner (Project Lead)
+    Salvatore Russo
+    Sophie Pilz
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <title>Datensatz: Rampe Treppe</title>
+    <style>
+        .break-word {
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="my-4">Datensatz: Rampe Treppe</h1>
+        <!-- Filterformular -->
+        <form method="post" action="" class="mb-4">
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="filter-bauart">Filter nach Bauart:</label>
+                <select class="form-select" id="filter-bauart" name="bauart">
+                    <option value="">Alle</option>
+                    {% for bauart in bauart_options %}
+                        <option value="{{ bauart }}" {% if selected_bauart == bauart %}selected{% endif %}>{{ bauart }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="filter-b_jahr">Filter nach Baujahr:</label>
+                <select class="form-select" id="filter-b_jahr" name="b_jahr">
+                    <option value="">Alle</option>
+                    {% for b_jahr in b_jahr_options %}
+                        <option value="{{ b_jahr }}" {% if selected_b_jahr == b_jahr %}selected{% endif %}>{{ b_jahr }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Filter ausführen</button>
+        </form>
+        <!-- Daten anzeigen -->
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for item in data %}
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            Fid {{ item['fid'] }}
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Attribute</th>
+                                        <th scope="col">Werte</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for key, value in item.items() %}
+                                        <tr>
+                                            <td class="break-word">{{ key }}</td>
+                                            <td class="break-word">
+                                                {% if value is mapping %}
+                                                    {% for k, v in value.items() %}
+                                                        {{ k }}: {{ v }}<br>
+                                                    {% endfor %}
+                                                {% else %}
+                                                    {{ value }}
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
