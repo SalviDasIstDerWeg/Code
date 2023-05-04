@@ -1,11 +1,20 @@
 from flask import Flask, render_template, request
-import json
 
+# Importiere JSON-Modul zur Verarbeitung von JSON-Dateien
+import json
+import os
+
+# Erstelle Flask-Anwendung und Zuweisung der Variable "app" , __name__ gibt Namen des aktuellen Moduls an
 app = Flask(__name__)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    with open("rampe-treppe.json", "r") as file:
+   # Ermittle den absoluten Pfad zur aktuellen Datei
+    base_dir = os.path.abspath(os.path.dirname(__file__))
+    file_path = os.path.join(base_dir, 'rampe-treppe.json')
+    
+    # JSON-Datei öffnen und Daten laden
+    with open(file_path, "r") as file:  # Verwenden Sie hier file_path
         data = json.load(file)
 
     bauart_options = sorted(set([item["bauart"] for item in data if item["bauart"] is not None]))
@@ -25,5 +34,6 @@ def index():
 
     return render_template("index_3b.html", data=data, bauart_options=bauart_options, selected_bauart=selected_bauart, b_jahr_options=b_jahr_options, selected_b_jahr=selected_b_jahr)
 
+# Wenn Python-Datei direkt ausgeührt wird, startet Flask-App im Debug-Modus
 if __name__ == "__main__":
     app.run(debug=True)
