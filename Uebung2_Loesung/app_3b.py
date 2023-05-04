@@ -37,3 +37,4 @@ def index():
 # Wenn Python-Datei direkt ausgeührt wird, startet Flask-App im Debug-Modus
 if __name__ == "__main__":
     app.run(debug=True)
+
