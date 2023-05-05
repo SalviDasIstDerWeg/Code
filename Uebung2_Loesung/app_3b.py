@@ -1,20 +1,32 @@
+# -----------------------------------------------
+# Autoren:
+# Philipp Michtner
+# Salvatore Russo
+# Sophie Pilz
+#
+# Institution: FHGR
+# Kurs: Dashboard Design, MScUED&DV-WPF-FS23
+# Aufgabenblatt 2, Aufgabe 3b
+# Abgabedatum: 12.05.2023
+# -----------------------------------------------
+
 from flask import Flask, render_template, request
 
-# Importiere JSON-Modul zur Verarbeitung von JSON-Dateien
+# Importiere JSON-Modul für Verarbeitung JSON-Dateien
 import json
 import os
 
-# Erstelle Flask-Anwendung und Zuweisung der Variable "app" , __name__ gibt Namen des aktuellen Moduls an
+# Erstelle Flask-Anwendung, Zuweisung der Variable "app"
 app = Flask(__name__)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-   # Ermittle den absoluten Pfad zur aktuellen Datei
+   # Ermittle absoluten Pfad zur aktuellen Datei
     base_dir = os.path.abspath(os.path.dirname(__file__))
-    file_path = os.path.join(base_dir, 'rampe-treppe.json')
+    file_path = os.path.join(base_dir, 'rampe-treppe.json') # file_path für JSON-Datei
     
     # JSON-Datei öffnen und Daten laden
-    with open(file_path, "r") as file:  # Verwenden Sie hier file_path
+    with open(file_path, "r") as file:  # Verwendung von file_path
         data = json.load(file)
 
     bauart_options = sorted(set([item["bauart"] for item in data if item["bauart"] is not None]))

@@ -1,13 +1,25 @@
+# -----------------------------------------------
+# Autoren:
+# Philipp Michtner
+# Salvatore Russo
+# Sophie Pilz
+#
+# Institution: FHGR
+# Kurs: Dashboard Design, MScUED&DV-WPF-FS23
+# Aufgabenblatt 2, Aufgabe 3a
+# Abgabedatum: 12.05.2023
+# ----------------------------------------------
+
 # Importiere Flask-Klasse und render_template-Funktion aus der Flask-Bibliothek
 # Flask: Web-Framework zur Erstellung von Webanwendungen
 # render_template: Funktion zum Rendern von HTML-Dateien mit dynamischen Daten (Jinja2-Template-System)
 from flask import Flask, render_template
 
-# Importiere JSON-Modul zur Verarbeitung von JSON-Dateien
+# Importiere JSON-Modul für Verarbeitung von JSON-Dateien
 import json
 import os
 
-# Erstelle Flask-Anwendung und Zuweisung der Variable "app" , __name__ gibt Namen des aktuellen Moduls an
+# Erstelle Flask-Anwendung und Zuweisung der Variable "app" 
 app = Flask(__name__)
 
 
