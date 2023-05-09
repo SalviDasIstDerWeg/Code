@@ -1,5 +1,6 @@
 # -----------------------------------------------
 # Autoren:
+# Irene Antolín Pérez
 # Philipp Michtner
 # Salvatore Russo
 # Sophie Pilz
@@ -9,6 +10,12 @@
 # Aufgabenblatt 2, Aufgabe 3a
 # Abgabedatum: 12.05.2023
 # ----------------------------------------------
+# Quellen:
+# Flask: https://flask.palletsprojects.com/
+# Jinja2: https://jinja.palletsprojects.com/
+# JSON: https://docs.python.org/3/library/json.html
+# os: https://docs.python.org/3/library/os.html
+# -----------------------------------------------
 
 # Importiere Flask-Klasse und render_template-Funktion aus der Flask-Bibliothek
 # Flask: Web-Framework zur Erstellung von Webanwendungen

@@ -1,5 +1,6 @@
 # -----------------------------------------------
 # Autoren:
+# Irene Antolín Pérez
 # Philipp Michtner
 # Salvatore Russo
 # Sophie Pilz
@@ -8,6 +9,12 @@
 # Kurs: Dashboard Design, MScUED&DV-WPF-FS23
 # Aufgabenblatt 2, Aufgabe 3b
 # Abgabedatum: 12.05.2023
+# -----------------------------------------------
+# Quellen:
+# Flask: https://flask.palletsprojects.com/
+# Jinja2: https://jinja.palletsprojects.com/
+# JSON: https://docs.python.org/3/library/json.html
+# os: https://docs.python.org/3/library/os.html
 # -----------------------------------------------
 
 from flask import Flask, render_template, request
