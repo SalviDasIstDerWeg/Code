@@ -1,5 +1,5 @@
 # -----------------------------------------------
-# Autoren:
+# Autor:innen:
 # Andrea Zimmermann
 # Irene Antolín Pérez
 # Philipp Michtner
@@ -23,7 +23,7 @@ import dash_bootstrap_components as dbc
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-df = pd.DataFrame({'y': np.random.normal(loc=0, scale=10, size=1000), 'x': np.random.normal(loc=10, scale=2, size=1000)})
+df = pd.DataFrame({'y': np.random.normal(loc=0, scale=10, size=1000), 'x': np.random.normal(loc=10, scale=2, size=1000), 'z': np.random.normal(loc=15, scale=2, size=1000)})
 
 app.layout = html.Div([html.Div([html.H1("Dashboard 3")], className="header"), html.Div([dcc.Tabs(id="tabs", children=[
             dcc.Tab(label='Tab One', id="tab_1_graphs", children=[html.Div([
@@ -33,10 +33,12 @@ app.layout = html.Div([html.Div([html.H1("Dashboard 3")], className="header"), h
                          dbc.Col([dcc.Graph(id="graph_2")],width=6)])], className="tab_content"),]),
             dcc.Tab(label='Tab Two', id="tab_2_graphs", children=[html.Div([
                 #Tab Two content begins
-                dbc.Row([dbc.Col([dcc.Dropdown(options=['pink','green','orange'], value='green', id='color_2', multi=False)], width=6)]),
-                dbc.Row([dbc.Col([dcc.Graph(id="graph_3")],width=6)]),
+                dbc.Row([dbc.Col([dcc.Dropdown(options=['pink','green','orange'], value='green', id='color_2', multi=False)], width=6),
+                         dbc.Col([dcc.Dropdown(options=['purple','blue','red', 'green'], value='blue', id='color_3', multi=False)], width=6)]),
+                dbc.Row([dbc.Col([dcc.Graph(id="graph_3")],width=6),
+                         dbc.Col([dcc.Graph(id="graph_4")],width=6)])
                 #Tab Two content ends
-                ],className="tab_content")]),])], className="content")])
+                ], className="tab_content")]),])], className="content")])
 
 @app.callback(Output("graph_1", "figure"), Input("color", "value"))
 
@@ -60,6 +62,13 @@ def update_graph_2(min_value):
 
 def update_graph_3(dropdown_value_color):
     fig = px.line(df, x="y", y="x", color_discrete_sequence=[dropdown_value_color])
+    fig.update_layout(template="plotly_dark")
+    return fig
+
+@app.callback(Output("graph_4", "figure"), Input("color_3", "value"))
+
+def update_graph_4(dropdown_value_color):
+    fig = px.scatter_matrix(df, dimensions=["x", "y", "z"], color_discrete_sequence=[dropdown_value_color])
     fig.update_layout(template="plotly_dark")
     return fig
 
