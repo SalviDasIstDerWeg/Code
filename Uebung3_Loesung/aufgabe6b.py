@@ -15,6 +15,7 @@
 import math
 from dash import Dash, dcc, html, Input, Output
 import plotly.express as px
+import plotly.graph_objects as go
 import numpy as np
 import pandas as pd
 import dash_bootstrap_components as dbc
@@ -24,8 +25,6 @@ import dash_bootstrap_components as dbc
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 df = pd.DataFrame({'y': np.random.normal(loc=0, scale=10, size=1000), 'x': np.random.normal(loc=10, scale=2, size=1000), 'z': np.random.normal(loc=15, scale=2, size=1000)})
-
-image = "https://media4.giphy.com/media/a93jwI0wkWTQs/giphy.gif"
 
 app.layout = html.Div([html.Div([html.H1("Dashboard 3")], className="header"), html.Div([dcc.Tabs(id="tabs", children=[
             dcc.Tab(label='Tab One', id="tab_1_graphs", children=[html.Div([
@@ -43,8 +42,9 @@ app.layout = html.Div([html.Div([html.H1("Dashboard 3")], className="header"), h
                 ], className="tab_content"),]),
             dcc.Tab(label='Tab Three', id="tab_3_graphs", children=[html.Div([
                 #Tab Three content begins
-                dbc.Row([dbc.Col()],),
-                         dbc.Col([html.Img(src=image, width="100%")], width=6)
+                dbc.Row([dbc.Col(html.Div([dbc.Label("Please select your color:", html_for="color_4"),
+                        dcc.Dropdown(options=["Hot", "Inferno", "Viridis", "Plasma", "Cividis", "Greys"], value='Viridis', id='color_4', multi=False)]),width={"size": 3,"offset": 1})]),
+                dbc.Row([dbc.Col([dcc.Graph(id="graph_5")],width=12)])
                 #Tab Three content ends
                 ], className="tab_content")]),])], className="content")])
 
@@ -78,6 +78,13 @@ def update_graph_3(dropdown_value_color):
 def update_graph_4(dropdown_value_color):
     fig = px.scatter_matrix(df, dimensions=["x", "y", "z"], color_discrete_sequence=[dropdown_value_color])
     fig.update_layout(template="plotly_dark")
+    return fig
+
+@app.callback(Output("graph_5", "figure"), Input("color_4", "value"))
+
+def update_graph_5(dropdown_value_color):
+    fig = go.Figure(data=go.Heatmap(z=df.values.T, x=df.columns, y=df.index, colorscale=dropdown_value_color))
+    fig.update_layout(template="plotly_white")
     return fig
 
 if __name__ == '__main__':
