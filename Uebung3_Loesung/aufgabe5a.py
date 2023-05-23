@@ -1,3 +1,17 @@
+# -----------------------------------------------
+# Autoren:
+# Andrea Zimmermann
+# Irene Antolín Pérez
+# Philipp Michtner
+# Salvatore Russo
+# Sophie Pilz
+#
+# Institution: FHGR
+# Kurs: Dashboard Design, MScUED&DV-WPF-FS23
+# Aufgabenblatt 3, Aufgabe 5a
+# Abgabedatum: 26.05.2023
+# ----------------------------------------------
+
 import math
 from dash import Dash, dcc, html, Input, Output
 import plotly.express as px
