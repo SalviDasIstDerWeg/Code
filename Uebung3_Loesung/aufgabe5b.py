@@ -1,5 +1,5 @@
 # -----------------------------------------------
-# Autor:innen:
+# Autor*innen:
 # Andrea Zimmermann
 # Irene Antolín Pérez
 # Philipp Michtner
