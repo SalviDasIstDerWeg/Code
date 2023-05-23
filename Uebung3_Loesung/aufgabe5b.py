@@ -8,7 +8,7 @@
 #
 # Institution: FHGR
 # Kurs: Dashboard Design, MScUED&DV-WPF-FS23
-# Aufgabenblatt 3, Aufgabe 6a
+# Aufgabenblatt 3, Aufgabe 5b
 # Abgabedatum: 26.05.2023
 # ----------------------------------------------
 
