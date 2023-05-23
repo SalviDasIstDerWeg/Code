@@ -26,6 +26,7 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 df = pd.DataFrame({'y': np.random.normal(loc=0, scale=10, size=1000),
                    'x': np.random.normal(loc=10, scale=2, size=1000)})
 
+# Tausch Reihenfolge Dropdown und Slider-Elemente
 app.layout = html.Div([html.H1("Dashboard 2"),
     dbc.Row([
              dbc.Col([dcc.Slider(min=math.floor(df['y'].min()), max=math.ceil(df['y'].max()), id="min_value")], width=6),
@@ -35,16 +36,16 @@ app.layout = html.Div([html.H1("Dashboard 2"),
              dbc.Col([dcc.Graph(id="graph_2")], width=6)
     ])], className="m-4")
 
+# Callback Funktion graph_1 geändert, um auf Slider zu reagieren (nicht auf Dropdown)
 @app.callback(Output("graph_1", "figure"), Input("min_value", "value"))
-
 def update_graph_1(min_value):
     dff = df[df['y']> min_value]
     fig = px.histogram(dff, x="y")
     fig.update_layout()
     return fig
 
+# Callback Funktion graph_2 geändert, um auf Dropdown zu reagieren (nicht auf Slider)
 @app.callback(Output("graph_2", "figure"), Input("color", "value"))
-
 def update_graph_2(dropdown_value_color):
     fig = px.scatter(df, x='x', y='y', color_discrete_sequence=[dropdown_value_color])
     fig.update_layout()
