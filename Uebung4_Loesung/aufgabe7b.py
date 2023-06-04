@@ -11,6 +11,7 @@
 # Aufgabenblatt 3, Aufgabe 7b
 # Abgabedatum: 09.06.2023
 # ----------------------------------------------
+
 import math
 from dash import Dash, dcc, html, Input, Output
 import plotly.express as px
