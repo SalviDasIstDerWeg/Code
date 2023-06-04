@@ -35,33 +35,34 @@ X, y = make_blobs(n_samples=100, centers=3, n_features=2, random_state=0)
 cluster_df = pd.DataFrame(data=X, columns=["X", "Y"])
 cluster_df['cluster'] = [str(i) for i in y]
 
-# Code geandert
+# Code NEU
+# Definition Dashboard mit Tabs, Dropdown-Menüs und Graphen
 app.layout = html.Div([
-    html.Div([html.H1("Dashboard 4")], className="header"),
-    html.Div([dcc.Tabs(id="tabs", children=[
-        dcc.Tab(label='Tab One', id="tab_1_graphs", children=[
+    html.Div([html.H1("Dashboard - Aufgabe 7a")], className="header"),  # Header des Dashboards
+    html.Div([dcc.Tabs(id="tabs", children=[  # Tabs-Komponente
+        dcc.Tab(label='Tab One', id="tab_1_graphs", children=[  # Tab One
             html.Div([
                 dbc.Row([
-                    dbc.Col([dcc.Dropdown(options=['red','green','blue'], value='red', id='color', multi=False)], width=6),
-                    dbc.Col([dcc.Slider(min=math.floor(df['y'].min()), max=math.ceil(df['y'].max()), id="min_value")], width=6)
+                    dbc.Col([dcc.Dropdown(options=['red','green','blue'], value='red', id='color', multi=False)], width=6),  # Dropdown-Menü
+                    dbc.Col([dcc.Slider(min=math.floor(df['y'].min()), max=math.ceil(df['y'].max()), id="min_value")], width=6)  # Schieberegler
                 ]),
                 dbc.Row([
-                    dbc.Col([dcc.Graph(id="graph_1")], width=6),
-                    dbc.Col([dcc.Graph(id="graph_2"), dcc.Graph(id='graph_2_ausgewaehlt')], width=6)  # Neuer Graph
+                    dbc.Col([dcc.Graph(id="graph_1")], width=6),  # Graph 1
+                    dbc.Col([dcc.Graph(id="graph_2"), dcc.Graph(id='graph_2_ausgewaehlt')], width=6)  # Graph 2 und ausgewählter Graph
                 ])
             ], className="tab_content"),
         ]),
-        dcc.Tab(label='Tab Two', id="tab_2_graphs", children=[
+        dcc.Tab(label='Tab Two', id="tab_2_graphs", children=[  # Tab Two
             html.Div([
                 dbc.Row([
-                    dbc.Col([dcc.Graph(id="graph_3"), dcc.Graph(id='graph_3_ausgewaehlt')], width=8),  # Neuer Graph
-                    dbc.Col([dcc.Graph(id="graph_4")], width=4)
+                    dbc.Col([dcc.Graph(id="graph_3"), dcc.Graph(id='graph_3_ausgewaehlt')], width=8),  # Graph 3 und ausgewählter Graph
+                    dbc.Col([dcc.Graph(id="graph_4")], width=4)  # Graph 4
                 ])
             ], className="tab_content")
         ])
     ])], className="content")
 ])
-# ENDE Code geandert 
+# Code NEU ENDE
 
 @app.callback(Output("graph_1", "figure"), Input("color", "value"))
 def update_graph_1(dropdown_value_color):
@@ -79,15 +80,17 @@ def update_graph_2(min_value):
     fig.update_layout(template="plotly_white")
     return fig
 
-# Code hinzugefuegt
+# Code NEU
+# Callback-Funktion, um ausgewählten Datenpunkt im Graphen graph_2 anzuzeigen
 @app.callback(Output('graph_2_ausgewaehlt', 'figure'), Input('graph_2', 'selectedData'))
 def display_ausgewaehlt_data_2(selectedData):
-    if selectedData is None:
-        return {}
+    if selectedData is None:  # Überprüfen, ob kein Datenpunkt ausgewählt wurde
+        return {}  # Leeres Dictionary zurückgeben
     else:
-        dff = pd.DataFrame(selectedData['points'])
-        return px.scatter(dff, x='x', y='y')
-# Ende Code hinzugefuegt
+        dff = pd.DataFrame(selectedData['points'])  # Konvertieren der ausgewählten Daten in ein DataFrame
+        return px.scatter(dff, x='x', y='y')  # Scatterplot des ausgewählten Datenpunkts erstellen und zurückgeben
+
+# Code NEU ENDE
 
 @app.callback(Output("graph_3", "figure"), Output("graph_4", "figure"), Input("graph_3", "relayoutData"))
 def update_graph_3_and_4(selected_data):
@@ -109,7 +112,7 @@ def update_graph_3_and_4(selected_data):
     fig4.update_layout(height=750, template="plotly_white", title="<b>Counts per cluster</b>", xaxis_title="cluster", title_font_size= 25)
     return fig3, fig4
 
-# Code hinzugefuegt 
+# Code NEU
 @app.callback(Output('graph_3_ausgewaehlt', 'figure'), Input('graph_3', 'selectedData'))
 def display_ausgewaehlt_data_3(selectedData):
     if selectedData is None:
@@ -117,7 +120,7 @@ def display_ausgewaehlt_data_3(selectedData):
     else:
         dff = pd.DataFrame(selectedData['points'])
         return px.scatter(dff, x='x', y='y')
-# Ende Code hinzugefuegt
+# Code NEU ENDE
 
 if __name__ == '__main__':
     app.run_server(debug=True, port=8012)

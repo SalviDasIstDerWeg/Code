@@ -1,3 +1,16 @@
+# -----------------------------------------------
+# Autor*innen:
+# Andrea Zimmermann
+# Irene Antolín Pérez
+# Philipp Michtner
+# Salvatore Russo
+# Sophie Pilz
+#
+# Institution: FHGR
+# Kurs: Dashboard Design, MScUED&DV-WPF-FS23
+# Aufgabenblatt 3, Aufgabe 8b
+# Abgabedatum: 09.06.2023
+# ----------------------------------------------
 import math
 
 from dash import Dash, dcc, html, Input, Output
@@ -33,8 +46,9 @@ X, y = make_blobs(n_samples=7500, centers=3, n_features=2, random_state=0, clust
 cluster_df = pd.DataFrame(data=X, columns=["X", "Y"])
 cluster_df['cluster'] = [str(i) for i in y]
 
+# Code NEU
 app.layout = html.Div([
-    html.Div([html.H1("Dashboard 6")], style={'margin': '10px 25px 25px 25px'}), 
+    html.Div([html.H1("Dashboard - Aufgabe 8b")], style={'margin': '10px 25px 25px 25px'}), 
     html.Div([
         dcc.Tabs(id="tabs", children=[
             dcc.Tab(label='Tab One', children=[
@@ -55,7 +69,7 @@ app.layout = html.Div([
                         dbc.Col([dcc.Graph(id="graph_3")], width=8),
                         dbc.Col([
                             dcc.Graph(id="graph_4"), 
-                            html.Div(id='cluster_table') # New table to display cluster counts
+                            html.Div(id='cluster_table') # Neue Tabelle für Clusterzahlen
                         ], width=4)
                     ]),
                     dbc.Row([
@@ -72,6 +86,7 @@ app.layout = html.Div([
         ])
     ], style={"margin": "10px 25px 25px 25px"})
 ])
+# Code NEU ENDE
 
 def update_selected_data(selected_data):
     if selected_data is None or (isinstance(selected_data, dict) and 'xaxis.range[0]' not in selected_data):
@@ -116,13 +131,15 @@ def update_graph_3_and_4(selected_data):
     fig4 = go.Figure(data=[go.Bar(x=group_counts.index, y=group_counts['X'], marker_color=[COLORS.get(i) for i in group_counts.index])])
     fig4.update_layout(height=PLOT_HEIGHT, template="plotly_white", title="<b>Counts per cluster</b>", xaxis_title="cluster", title_font_size=25)
 
-    # Define HTML table to display cluster counts
+# Code NEU
+# HTML-Tabelle zur Anzeige der Clusterzahlen
     cluster_counts_table = html.Table(
         [html.Tr([html.Th("Cluster"), html.Th("Count")])] +
         [html.Tr([html.Td(cluster), html.Td(count)]) for cluster, count in zip(group_counts.index, group_counts['X'])]
     )
 
     return fig3, fig4, cluster_counts_table
+#Code NEU ENDE
 
 @app.callback(Output("graph_5", "figure"), Input("graph_5_nbins", "value"), Input("graph_5_color", "value"), Input("graph_5_separated", "value"), Input("graph_3", "relayoutData"),)
 def update_graph_5(nbins, color, separated, selected_data):

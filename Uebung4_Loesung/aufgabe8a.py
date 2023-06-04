@@ -1,3 +1,16 @@
+# -----------------------------------------------
+# Autor*innen:
+# Andrea Zimmermann
+# Irene Antolín Pérez
+# Philipp Michtner
+# Salvatore Russo
+# Sophie Pilz
+#
+# Institution: FHGR
+# Kurs: Dashboard Design, MScUED&DV-WPF-FS23
+# Aufgabenblatt 3, Aufgabe 8a
+# Abgabedatum: 09.06.2023
+# ----------------------------------------------
 import math
 
 from dash import Dash, dcc, html, Input, Output
@@ -8,22 +21,30 @@ import pandas as pd
 import dash_bootstrap_components as dbc
 from sklearn.datasets import make_blobs
 
+# New: Density heatmap (2 columns) as third plot on tab 2
+# with color and resolution options
+# New: Everything with inline style and bootstrap (no CSS)
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+# generate random normal distributed data for x and y
+# and store it in a Pandas DataFrame (for plot 1,2, and 5)
 
 np.random.seed(seed=8)
 
 df = pd.DataFrame({'y': np.random.normal(loc=0, scale=10, size=1000),
                    'x': np.random.normal(loc=10, scale=2, size=1000)})
 
+# define cluster colors
 COLORS = {'0': "red", '1': "blue", '2': "grey"}
 
+# generic cluster data (for plot 3 and 4)
 X, y = make_blobs(n_samples=7500, centers=3, n_features=2, random_state=0, cluster_std=0.75)
 
 cluster_df = pd.DataFrame(data=X, columns=["X", "Y"])
 cluster_df['cluster'] = [str(i) for i in y]
 
+# Code NEU
 app.layout = html.Div([
-    html.H1("Dashboard 6"),
+    html.H1("Dashboard - Aufgabe 8a"),
     dcc.Tabs(id="tabs", children=[
         dcc.Tab(label='Tab One', children=[
             dbc.Row([
@@ -60,7 +81,6 @@ app.layout = html.Div([
         ]),
     ])
 ])
-
 @app.callback(
     Output("graph_5", "figure"),
     Output("graph_3", "figure"),
@@ -83,6 +103,7 @@ def update_all_graphs(nbins, color, separated):
     fig4.update_layout(height=400, template="plotly_white", title="<b>Counts per cluster</b>", xaxis_title="cluster", title_font_size=25)
     
     return fig5, fig3, fig4
+# Code NEU ENDE
 
 @app.callback(Output("graph_1", "figure"), Input("color", "value"))
 def update_graph_1(dropdown_value_color):
