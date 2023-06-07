@@ -1,5 +1,5 @@
 # -----------------------------------------------
-# Autor*innen:
+# Autor:innen:
 # Andrea Zimmermann
 # Irene Antolín Pérez
 # Philipp Michtner
@@ -8,9 +8,10 @@
 #
 # Institution: FHGR
 # Kurs: Dashboard Design, MScUED&DV-WPF-FS23
-# Aufgabenblatt 3, Aufgabe 8b
+# Aufgabenblatt 4, Aufgabe 8b
 # Abgabedatum: 09.06.2023
 # ----------------------------------------------
+
 import math
 
 from dash import Dash, dcc, html, Input, Output

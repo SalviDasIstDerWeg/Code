@@ -1,5 +1,5 @@
 # -----------------------------------------------
-# Autor*innen:
+# Autor:innen:
 # Andrea Zimmermann
 # Irene Antolín Pérez
 # Philipp Michtner
@@ -8,7 +8,7 @@
 #
 # Institution: FHGR
 # Kurs: Dashboard Design, MScUED&DV-WPF-FS23
-# Aufgabenblatt 3, Aufgabe 7b
+# Aufgabenblatt 4, Aufgabe 7b
 # Abgabedatum: 09.06.2023
 # ----------------------------------------------
 
