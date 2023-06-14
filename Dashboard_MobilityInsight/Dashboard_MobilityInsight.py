@@ -1,5 +1,5 @@
 # -----------------------------------------------
-# Autor*innen:
+# Autor:innen:
 # Andrea Zimmermann
 # Irene Antolín Pérez
 # Philipp Michtner
@@ -8,9 +8,10 @@
 #
 # Institution: FHGR
 # Kurs: Dashboard Design, MScUED&DV-WPF-FS23
-# Aufgabe: Dashboard erstellen
+# Aufgabe: Finales Dashboard (Dashboard erstellen)
 # Abgabedatum: 01.07.2023
 # ----------------------------------------------
+
 import pandas as pd
 import plotly.express as px
 from dash import Dash, dcc, html, Input, Output, State
@@ -112,7 +113,7 @@ app.layout = html.Div([
             ),
             html.Div(
                 children=[
-                    html.H3("Andrea Zimmermann, Irene Anatolin, Phlippp Michtner, Salvatore Russo, Sophie Pliz", style={'fontSize': '0.8em', 'textAlign': 'center'}),
+                    html.H3("Andrea Zimmermann · Irene Antolín Pérez · Philipp Michtner · Salvatore Russo · Sophie Pilz", style={'fontSize': '0.8em', 'textAlign': 'center'}),
                 ]
             )
         ]
