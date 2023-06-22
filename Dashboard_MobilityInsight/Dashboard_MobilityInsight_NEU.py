@@ -10,6 +10,7 @@
 # Kurs: Dashboard Design, MScUED&DV-WPF-FS23
 # Aufgabe: Finales Dashboard (Dashboard erstellen)
 # Abgabedatum: 01.07.2023
+# Version: NEU (w/ Data Import)
 # ----------------------------------------------
 
 import pandas as pd
@@ -19,10 +20,17 @@ import dash_bootstrap_components as dbc
 import plotly.graph_objs as go
 from dash import dash_table
 
+#Import von JSON
+df = pd.read_json("rampe-treppe.json")
+#print(df.columns)
+#print(df)
+
+
 # Anwendung erstellen
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 # Balkendiagramm 1 (fig1): Daten
+"""
 baujahre = ['1990', '2000', '2010', '2020']
 anzahl_rampen = [5, 10, 20, 25]
 anzahl_treppen = [15, 12, 8, 5]
@@ -32,6 +40,13 @@ fig1 = go.Figure(data=[
     go.Bar(name='Rampen', x=baujahre, y=anzahl_rampen),
     go.Bar(name='Treppen', x=baujahre, y=anzahl_treppen)
 ])
+"""
+
+fig1 = px.histogram(df, x="b_jahr",
+             color='typ', barmode='group',
+             height=400)
+
+
 
 # Balkendiagramm 1 (fig1): Layout
 fig1.update_layout(
@@ -48,11 +63,28 @@ baujahre = [1990, 2000, 2010, 2020]
 durchschnittliche_breite = [1.5, 1.7, 1.8, 2.0]
 durchschnittliche_laenge = [10, 12, 15, 18]
 
+"""
 # Liniendiagramm (fig2): Erstellung
 fig2 = go.Figure()
 
 fig2.add_trace(go.Scatter(x=baujahre, y=durchschnittliche_breite, mode='lines+markers', name='Durchschnittliche Breite'))
 fig2.add_trace(go.Scatter(x=baujahre, y=durchschnittliche_laenge, mode='lines+markers', name='Durchschnittliche Länge'))
+"""
+
+#Nach Jahr gruppierter Datensatz - as_index=False, da die Spalte b_jahr weiterhin als Spalte verfügbar sein soll
+df_group = df.groupby(['b_jahr'], as_index=False)[['breite', 'lange_m']].mean()
+#print(df_group)
+
+
+fig2 = go.Figure()
+fig2.add_trace(go.Scatter(x=df_group["b_jahr"], y=df_group["breite"],
+                    mode='lines',
+                    name='breite'))
+
+fig2.add_trace(go.Scatter(x=df_group["b_jahr"], y=df_group["lange_m"],
+                    mode='lines',
+                    name='länge'))
+
 
 # Liniendiagramm (fig2): Achsenbeschriftungen und Titel hinzufügen
 fig2.update_layout(title='Entwicklung der durchschnittlichen Breite und Länge von Treppen und Rampen', 
@@ -166,4 +198,4 @@ def toggle_modal(n1, n2, is_open):
     return is_open
 
 if __name__ == '__main__':
-    app.run_server(debug=True, port=8010)
+    app.run_server(debug=True, port=8000)
