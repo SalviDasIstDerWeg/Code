@@ -10,7 +10,7 @@
 # Kurs: Dashboard Design, MScUED&DV-WPF-FS23
 # Aufgabe: Finales Dashboard (Dashboard erstellen)
 # Abgabedatum: 01.07.2023
-# Version: NEU (w/ Data Import)
+# Version: NEU (w/ Data Import) - v1.1
 # ----------------------------------------------
 
 import pandas as pd
@@ -22,9 +22,12 @@ from dash import dash_table
 
 #Import von JSON
 df = pd.read_json("rampe-treppe.json")
+dff = df.copy()
 #print(df.columns)
 #print(df)
 
+#Filterung des dff für fig1 und fig2
+dff_fltrd1 = dff[(dff["b_jahr"] >= 1960) & (dff['b_jahr'] <= 2023)]
 
 # Anwendung erstellen
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -42,7 +45,7 @@ fig1 = go.Figure(data=[
 ])
 """
 
-fig1 = px.histogram(df, x="b_jahr",
+fig1 = px.histogram(dff_fltrd1, x="b_jahr",
              color='typ', barmode='group',
              height=400)
 
@@ -72,7 +75,7 @@ fig2.add_trace(go.Scatter(x=baujahre, y=durchschnittliche_laenge, mode='lines+ma
 """
 
 #Nach Jahr gruppierter Datensatz - as_index=False, da die Spalte b_jahr weiterhin als Spalte verfügbar sein soll
-df_group = df.groupby(['b_jahr'], as_index=False)[['breite', 'lange_m']].mean()
+df_group = dff.groupby(['b_jahr'], as_index=False)[['breite', 'lange_m']].mean()
 #print(df_group)
 
 
