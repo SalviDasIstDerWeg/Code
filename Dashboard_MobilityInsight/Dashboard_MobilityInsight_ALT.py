@@ -10,7 +10,6 @@
 # Kurs: Dashboard Design, MScUED&DV-WPF-FS23
 # Aufgabe: Finales Dashboard (Dashboard erstellen)
 # Abgabedatum: 01.07.2023
-# Version: NEU (w/ Data Import) - v1.2
 # ----------------------------------------------
 
 import pandas as pd
@@ -20,24 +19,19 @@ import dash_bootstrap_components as dbc
 import plotly.graph_objs as go
 from dash import dash_table
 
-#Import von JSON
-df = pd.read_json("rampe-treppe.json")
-dff = df.copy()
-#print(df.columns)
-#print(df)
-
-#Filterung des dff für fig1 und fig2
-dff_fltrd1 = dff[(dff["b_jahr"] >= 1960) & (dff['b_jahr'] <= 2023)]
-
 # Anwendung erstellen
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
+# Balkendiagramm 1 (fig1): Daten
+baujahre = ['1990', '2000', '2010', '2020']
+anzahl_rampen = [5, 10, 20, 25]
+anzahl_treppen = [15, 12, 8, 5]
 
-# Balkendiagramm 1 (fig1): Diagramm
-
-fig1 = px.histogram(dff_fltrd1, x="b_jahr",
-             color='typ', barmode='group',
-             height=400)
+# Balkendiagramm 1 (fig1): Erstellung
+fig1 = go.Figure(data=[
+    go.Bar(name='Rampen', x=baujahre, y=anzahl_rampen),
+    go.Bar(name='Treppen', x=baujahre, y=anzahl_treppen)
+])
 
 # Balkendiagramm 1 (fig1): Layout
 fig1.update_layout(
@@ -45,30 +39,24 @@ fig1.update_layout(
     title_text='Anzahl der Rampen und Treppen in Abhängigkeit vom Baujahr',
     xaxis_title="Baujahr",
     yaxis_title="Anzahl",
-    #paper_bgcolor='rgba(240, 240, 240, 0.5)',  # Farbe Aussenbereich hellgrau
+    paper_bgcolor='rgba(240, 240, 240, 0.5)',  # Farbe Aussenbereich hellgrau
     #plot_bgcolor='rgba(240, 240, 240, 0.5)'   # Farbe Innenbereich hellgrau
 )
 
+# Liniendiagramm (fig2): Daten
+baujahre = [1990, 2000, 2010, 2020]
+durchschnittliche_breite = [1.5, 1.7, 1.8, 2.0]
+durchschnittliche_laenge = [10, 12, 15, 18]
 
-# Liniendiagramm (fig2): Diagramm
-
-#Nach Jahr gruppierter Datensatz - as_index=False, da die Spalte b_jahr weiterhin als Spalte verfügbar sein soll
-dff_group = dff_fltrd1.groupby(['b_jahr'], as_index=False)[['breite', 'lange_m']].mean()
-#print(df_group)
-
+# Liniendiagramm (fig2): Erstellung
 fig2 = go.Figure()
-fig2.add_trace(go.Scatter(x=dff_group["b_jahr"], y=dff_group["breite"],
-                    mode='lines',
-                    name='Breite'))
 
-fig2.add_trace(go.Scatter(x=dff_group["b_jahr"], y=dff_group["lange_m"],
-                    mode='lines',
-                    name='Länge'))
+fig2.add_trace(go.Scatter(x=baujahre, y=durchschnittliche_breite, mode='lines+markers', name='Durchschnittliche Breite'))
+fig2.add_trace(go.Scatter(x=baujahre, y=durchschnittliche_laenge, mode='lines+markers', name='Durchschnittliche Länge'))
 
 # Liniendiagramm (fig2): Achsenbeschriftungen und Titel hinzufügen
 fig2.update_layout(title='Entwicklung der durchschnittlichen Breite und Länge von Treppen und Rampen', 
                    xaxis_title='Baujahr', yaxis_title='Durchschnittliche Breite und Länge')
-
 
 # Balkendiagramm 2 (fig3): Daten 
 steigung_kategorien = ['0-5%', '6-10%', '11-15%', '16-20%']
@@ -89,7 +77,6 @@ fig3.update_layout(
     yaxis_title="Anzahl Zugänge"
 )
 
-
 # Map (fig4): Daten
 haltestellen = [
     {'name': 'Zürich HB', 'lat': 47.378177, 'lon': 8.540192, 'nutzung': 3000},
@@ -106,7 +93,6 @@ fig4 = px.scatter_mapbox(df, lat="lat", lon="lon", color="nutzung", size="nutzun
                   color_continuous_scale=px.colors.cyclical.IceFire, size_max=15, zoom=5)
 
 fig4.update_layout(mapbox_style="open-street-map", title="Einfluss Nähe Sehenswürdigkeiten auf die Fahrgastnutzung")
-
 
 # Popup Fenster: Daten für die Tabelle
 data = {'Name': ['\u2211 Attributwerte', '\u2211 Attribute', 'Attributnamen'], 'Wert': [131010, 30, 'anteil_eigentum, b_jahr, bauart...']}
@@ -180,4 +166,4 @@ def toggle_modal(n1, n2, is_open):
     return is_open
 
 if __name__ == '__main__':
-    app.run_server(debug=True, port=8000)
+    app.run_server(debug=True, port=8010)

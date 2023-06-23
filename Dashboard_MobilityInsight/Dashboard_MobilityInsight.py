@@ -10,6 +10,7 @@
 # Kurs: Dashboard Design, MScUED&DV-WPF-FS23
 # Aufgabe: Finales Dashboard (Dashboard erstellen)
 # Abgabedatum: 01.07.2023
+# Version: v1.3.1
 # ----------------------------------------------
 
 import pandas as pd
@@ -19,19 +20,32 @@ import dash_bootstrap_components as dbc
 import plotly.graph_objs as go
 from dash import dash_table
 
+# Import von JSON
+df = pd.read_json("rampe-treppe.json")
+dff = df.copy()
+#print(df.columns)
+#print(df)
+
+# Filterung dff für fig1 und fig2
+dff_fltrd1 = dff[(dff["b_jahr"] >= 1960) & (dff["b_jahr"] <= 2023)] # Filtern nach Baujahre zwischen 1960 und 2023
+
+# Filterung dff für fig3
+dff_fltrd2 = dff[(dff["b_jahr"] >= 1960) & (dff["b_jahr"] <= 2023)] # Filtern nach Baujahre zwischen 1960 und 2023
+dff_fltrd2["steigung"] = pd.to_numeric(dff_fltrd2["steigung"], errors="coerce") # Konvertierung string to numeric data type & ungültige Werte werden durch NaN ersetzt
+dff_fltrd2 = dff_fltrd2[dff_fltrd2["steigung"].notnull() & (dff_fltrd2["steigung"] % 1 == 0)] # Filtern nach Ganzen Zahlen (NaN und andere Werte werden ignoriert)
+handlauf_values = ["einseitig", "beidseitig", "kein"] # Vorbereitung des Filterns nach spezifischen Werten in "handlauf"/Liste - siehe nächste Zeile
+dff_fltrd2 = dff_fltrd2[dff_fltrd2["handlauf"].isin(handlauf_values)] # Filtern nach den Werten aus "handlauf_values"
+
+
 # Anwendung erstellen
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-# Balkendiagramm 1 (fig1): Daten
-baujahre = ['1990', '2000', '2010', '2020']
-anzahl_rampen = [5, 10, 20, 25]
-anzahl_treppen = [15, 12, 8, 5]
 
-# Balkendiagramm 1 (fig1): Erstellung
-fig1 = go.Figure(data=[
-    go.Bar(name='Rampen', x=baujahre, y=anzahl_rampen),
-    go.Bar(name='Treppen', x=baujahre, y=anzahl_treppen)
-])
+# Balkendiagramm 1 (fig1): Diagramm
+
+fig1 = px.histogram(dff_fltrd1, x="b_jahr",
+             color='typ', barmode='group',
+             height=400)
 
 # Balkendiagramm 1 (fig1): Layout
 fig1.update_layout(
@@ -39,35 +53,44 @@ fig1.update_layout(
     title_text='Anzahl der Rampen und Treppen in Abhängigkeit vom Baujahr',
     xaxis_title="Baujahr",
     yaxis_title="Anzahl",
-    paper_bgcolor='rgba(240, 240, 240, 0.5)',  # Farbe Aussenbereich hellgrau
+    #paper_bgcolor='rgba(240, 240, 240, 0.5)',  # Farbe Aussenbereich hellgrau
     #plot_bgcolor='rgba(240, 240, 240, 0.5)'   # Farbe Innenbereich hellgrau
 )
 
-# Liniendiagramm (fig2): Daten
-baujahre = [1990, 2000, 2010, 2020]
-durchschnittliche_breite = [1.5, 1.7, 1.8, 2.0]
-durchschnittliche_laenge = [10, 12, 15, 18]
 
-# Liniendiagramm (fig2): Erstellung
+# Liniendiagramm (fig2): Diagramm
+
+#Nach Jahr gruppierter Datensatz - as_index=False, da die Spalte b_jahr weiterhin als Spalte verfügbar sein soll
+dff_group = dff_fltrd1.groupby(['b_jahr'], as_index=False)[['breite', 'lange_m']].mean()
+#print(df_group)
+
 fig2 = go.Figure()
+fig2.add_trace(go.Scatter(x=dff_group["b_jahr"], y=dff_group["breite"],
+                    mode='lines',
+                    name='Durchschnittliche Breite'))
 
-fig2.add_trace(go.Scatter(x=baujahre, y=durchschnittliche_breite, mode='lines+markers', name='Durchschnittliche Breite'))
-fig2.add_trace(go.Scatter(x=baujahre, y=durchschnittliche_laenge, mode='lines+markers', name='Durchschnittliche Länge'))
+fig2.add_trace(go.Scatter(x=dff_group["b_jahr"], y=dff_group["lange_m"],
+                    mode='lines',
+                    name='Durchschnittliche Länge'))
 
 # Liniendiagramm (fig2): Achsenbeschriftungen und Titel hinzufügen
 fig2.update_layout(title='Entwicklung der durchschnittlichen Breite und Länge von Treppen und Rampen', 
                    xaxis_title='Baujahr', yaxis_title='Durchschnittliche Breite und Länge')
 
-# Balkendiagramm 2 (fig3): Daten 
-steigung_kategorien = ['0-5%', '6-10%', '11-15%', '16-20%']
-zugänge_mit_handlauf = [25, 15, 10, 5]
-zugänge_ohne_handlauf = [5, 10, 15, 20]
 
-# Balkendiagramm 2 (fig3): Erstellung
-fig3 = go.Figure(data=[
-    go.Bar(name='Mit Handlauf', x=steigung_kategorien, y=zugänge_mit_handlauf),
-    go.Bar(name='Ohne Handlauf', x=steigung_kategorien, y=zugänge_ohne_handlauf)
-])
+# Balkendiagramm 2 (fig3): Diagramm
+
+# Bins & Labels für Clustering
+bins = [0, 5, 10, 15, 20]
+labels = ["0-5%", "6-10%", "11-15%", "16-20%"]
+
+# Neue Spalte "steigung_cluster" inkl. Labels
+dff_fltrd2["steigung_cluster"] = pd.cut(dff_fltrd2["steigung"], bins=bins, labels=labels, include_lowest=True)
+
+# Definition der korrekten Cluster-Reihenfolge im Diagramm - nach "labels"
+category_orders = {"steigung_cluster": labels}
+
+fig3 = px.histogram(dff_fltrd2, x="steigung_cluster", color="handlauf", barmode="group", category_orders=category_orders)
 
 # Balkendiagramm 2 (fig3): Layout anpassen
 fig3.update_layout(
@@ -76,6 +99,7 @@ fig3.update_layout(
     xaxis_title="Steigung",
     yaxis_title="Anzahl Zugänge"
 )
+
 
 # Map (fig4): Daten
 haltestellen = [
@@ -93,6 +117,7 @@ fig4 = px.scatter_mapbox(df, lat="lat", lon="lon", color="nutzung", size="nutzun
                   color_continuous_scale=px.colors.cyclical.IceFire, size_max=15, zoom=5)
 
 fig4.update_layout(mapbox_style="open-street-map", title="Einfluss Nähe Sehenswürdigkeiten auf die Fahrgastnutzung")
+
 
 # Popup Fenster: Daten für die Tabelle
 data = {'Name': ['\u2211 Attributwerte', '\u2211 Attribute', 'Attributnamen'], 'Wert': [131010, 30, 'anteil_eigentum, b_jahr, bauart...']}
@@ -166,4 +191,4 @@ def toggle_modal(n1, n2, is_open):
     return is_open
 
 if __name__ == '__main__':
-    app.run_server(debug=True, port=8010)
+    app.run_server(debug=True, port=8000)
