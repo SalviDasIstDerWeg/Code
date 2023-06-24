@@ -10,7 +10,7 @@
 # Kurs: Dashboard Design, MScUED&DV-WPF-FS23
 # Aufgabe: Finales Dashboard (Dashboard erstellen)
 # Abgabedatum: 01.07.2023
-# Version: v1.5
+# Version: v1.6 release-pya-1-2023-06-24
 # ----------------------------------------------
 
 import pandas as pd
