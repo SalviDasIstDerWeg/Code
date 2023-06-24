@@ -10,7 +10,7 @@
 # Kurs: Dashboard Design, MScUED&DV-WPF-FS23
 # Aufgabe: Finales Dashboard (Dashboard erstellen)
 # Abgabedatum: 01.07.2023
-# Version: v1.4.1
+# Version: v1.5
 # ----------------------------------------------
 
 import pandas as pd
@@ -20,11 +20,12 @@ import dash_bootstrap_components as dbc
 import plotly.graph_objs as go
 from dash import dash_table
 
-# Import von JSON
+# Import von JSON - rampe-treppe
 df = pd.read_json("rampe-treppe.json")
 dff = df.copy()
-#print(df.columns)
-#print(df)
+
+# Import von CSV - nutzung-ber
+df2 = pd.read_csv("nutzung-ber.csv", delimiter=";", encoding="UTF-8")
 
 # Filterung dff für fig1 und fig2
 dff_fltrd1 = dff[(dff["b_jahr"] >= 1960) & (dff["b_jahr"] <= 2023)] # Filtern nach Baujahre zwischen 1960 und 2023
@@ -105,27 +106,17 @@ fig3.update_layout(
     barmode='group',
     font=dict(color='#FFFFFF'),
     title_text='Anzahl der Zugänge nach Steigung und Handlaufpräsenz',
-    xaxis_title="Steigung",
+    xaxis_title="Steigung in Cluster",
     yaxis_title="Anzahl Zugänge",
     legend=dict(title="Handlauftyp"),
     paper_bgcolor='#064D5C'   # Farbe Aussenbereich
 )
 
 
-# Map (fig4): Daten
-haltestellen = [
-    {'name': 'Zürich HB', 'lat': 47.378177, 'lon': 8.540192, 'nutzung': 3000},
-    {'name': 'Bern', 'lat': 46.948271, 'lon': 7.451451, 'nutzung': 2000},
-    {'name': 'Genf', 'lat': 46.210759, 'lon': 6.142256, 'nutzung': 1500},
-    {'name': 'Luzern', 'lat': 47.050168, 'lon': 8.309307, 'nutzung': 1000},
-    {'name': 'Basel', 'lat': 47.559602, 'lon': 7.588576, 'nutzung': 2500},
-    {'name': 'Lausanne', 'lat': 46.519962, 'lon': 6.633597, 'nutzung': 1200},
-]
+# Interaktive Karte (fig4): Diagramm
 
-df2 = pd.DataFrame(haltestellen)
-
-fig4 = px.scatter_mapbox(df2, lat="lat", lon="lon", color="nutzung", size="nutzung",
-                  color_continuous_scale=px.colors.cyclical.IceFire, size_max=15, zoom=5)
+fig4 = px.scatter_mapbox(df2, lat="lat", lon="lon", color="Nutzung", size="Nutzung",
+                  color_continuous_scale=px.colors.cyclical.IceFire, size_max=15, zoom=6)
 
 fig4.update_layout(
     font=dict(color='#FFFFFF'),
@@ -135,6 +126,8 @@ fig4.update_layout(
     paper_bgcolor='#064D5C',   # Farbe Aussenbereich
     height=600
     )
+
+fig4.update_geos(center=dict(lon=8.2275, lat=46.8182))
 
 
 # Popup Fenster: Daten für die Tabelle
