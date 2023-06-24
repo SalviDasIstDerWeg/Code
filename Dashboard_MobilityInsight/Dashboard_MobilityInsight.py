@@ -10,7 +10,7 @@
 # Kurs: Dashboard Design, MScUED&DV-WPF-FS23
 # Aufgabe: Finales Dashboard (Dashboard erstellen)
 # Abgabedatum: 01.07.2023
-# Version: v1.3.1
+# Version: v1.4.1
 # ----------------------------------------------
 
 import pandas as pd
@@ -45,16 +45,19 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 fig1 = px.histogram(dff_fltrd1, x="b_jahr",
              color='typ', barmode='group',
-             height=400)
+             # height=400
+             )
 
 # Balkendiagramm 1 (fig1): Layout
 fig1.update_layout(
     barmode='group',
+    font=dict(color='#FFFFFF'),
     title_text='Anzahl der Rampen und Treppen in Abhängigkeit vom Baujahr',
     xaxis_title="Baujahr",
     yaxis_title="Anzahl",
-    #paper_bgcolor='rgba(240, 240, 240, 0.5)',  # Farbe Aussenbereich hellgrau
-    #plot_bgcolor='rgba(240, 240, 240, 0.5)'   # Farbe Innenbereich hellgrau
+    legend=dict(title="Typ"),
+    #plot_bgcolor='#064D5C',  # Farbe Innenbereich
+    paper_bgcolor='#064D5C'   # Farbe Aussenbereich
 )
 
 
@@ -67,15 +70,20 @@ dff_group = dff_fltrd1.groupby(['b_jahr'], as_index=False)[['breite', 'lange_m']
 fig2 = go.Figure()
 fig2.add_trace(go.Scatter(x=dff_group["b_jahr"], y=dff_group["breite"],
                     mode='lines',
-                    name='Durchschnittliche Breite'))
+                    name='Breite'))
 
 fig2.add_trace(go.Scatter(x=dff_group["b_jahr"], y=dff_group["lange_m"],
                     mode='lines',
-                    name='Durchschnittliche Länge'))
+                    name='Länge'))
 
 # Liniendiagramm (fig2): Achsenbeschriftungen und Titel hinzufügen
-fig2.update_layout(title='Entwicklung der durchschnittlichen Breite und Länge von Treppen und Rampen', 
-                   xaxis_title='Baujahr', yaxis_title='Durchschnittliche Breite und Länge')
+fig2.update_layout(
+    font=dict(color='#FFFFFF'),
+    title='Durchschnittliche Breite und Länge von Treppen und Rampen', 
+    xaxis_title='Baujahr',
+    yaxis_title='Durchschnittliche Breite und Länge',
+    paper_bgcolor='#064D5C'   # Farbe Aussenbereich
+    )
 
 
 # Balkendiagramm 2 (fig3): Diagramm
@@ -95,9 +103,12 @@ fig3 = px.histogram(dff_fltrd2, x="steigung_cluster", color="handlauf", barmode=
 # Balkendiagramm 2 (fig3): Layout anpassen
 fig3.update_layout(
     barmode='group',
+    font=dict(color='#FFFFFF'),
     title_text='Anzahl der Zugänge nach Steigung und Handlaufpräsenz',
     xaxis_title="Steigung",
-    yaxis_title="Anzahl Zugänge"
+    yaxis_title="Anzahl Zugänge",
+    legend=dict(title="Handlauftyp"),
+    paper_bgcolor='#064D5C'   # Farbe Aussenbereich
 )
 
 
@@ -111,12 +122,19 @@ haltestellen = [
     {'name': 'Lausanne', 'lat': 46.519962, 'lon': 6.633597, 'nutzung': 1200},
 ]
 
-df = pd.DataFrame(haltestellen)
+df2 = pd.DataFrame(haltestellen)
 
-fig4 = px.scatter_mapbox(df, lat="lat", lon="lon", color="nutzung", size="nutzung",
+fig4 = px.scatter_mapbox(df2, lat="lat", lon="lon", color="nutzung", size="nutzung",
                   color_continuous_scale=px.colors.cyclical.IceFire, size_max=15, zoom=5)
 
-fig4.update_layout(mapbox_style="open-street-map", title="Einfluss Nähe Sehenswürdigkeiten auf die Fahrgastnutzung")
+fig4.update_layout(
+    font=dict(color='#FFFFFF'),
+    mapbox_style="open-street-map",
+    title="Einfluss der Nähe von Sehenswürdigkeiten auf die Fahrgastnutzung",
+    legend=dict(title="Nutzungsintensität"),
+    paper_bgcolor='#064D5C',   # Farbe Aussenbereich
+    height=600
+    )
 
 
 # Popup Fenster: Daten für die Tabelle
@@ -124,24 +142,29 @@ data = {'Name': ['\u2211 Attributwerte', '\u2211 Attribute', 'Attributnamen'], '
 df_table = pd.DataFrame(data)
 
 # Layoutelemente für das Dashboard 
-app.layout = html.Div([
+app.layout = html.Div(
+    style={'background-color': '#064D5C'},
+    children=[
     html.Div(style={'width': '60px', 'backgroundColor': 'black'}),
     html.Div(
         children=[
             html.Div(
                 children=[
-                    html.Img(src="/assets/logo.svg", style={'height':'70px', 'width':'auto', 'margin-left':'20px', 'margin-top':'20px'}),
-                    html.H1("Dashboard - Mobility Insight"),
-                    dbc.Button(html.Img(src="/assets/info.svg", style={'height':'30px', 'width':'auto', 'margin-right':'20px'}), id="open")
+                    html.Img(src="/assets/logo2.svg", style={'height':'70px', 'width':'auto', 'margin-left':'20px', 'margin-top':'20px'}),
+                    html.H1("Dashboard - Mobility Insight", style={'color': '#FFFFFF'}),
+                    dbc.Button(
+                        html.Img(src="/assets/info2.svg", style={'height':'30px', 'width':'auto'}), id="open", 
+                        style={'background-color': '#FFFFFF', 'border-color': '#FFFFFF' }) # Verändert die Farbe des kompletten Buttons
                 ],
-                style={'display': 'flex', 'align-items': 'center', 'justify-content': 'space-between'}
+                style={'display': 'flex', 'align-items': 'center', 'justify-content': 'space-between', 'background-color': '#064D5C'}
             ),
             html.Div(
                 children=[
-                    html.H3("Andrea Zimmermann · Irene Antolín Pérez · Philipp Michtner · Salvatore Russo · Sophie Pilz", style={'fontSize': '0.8em', 'textAlign': 'center'}),
+                    html.H3("Andrea Zimmermann · Irene Antolín Pérez · Philipp Michtner · Salvatore Russo · Sophie Pilz", style={'fontSize': '0.8em', 'textAlign': 'center', 'color': '#FFFFFF', 'background-color': '#064D5C', 'margin-bottom':'5px'}),
                 ]
             )
         ]
+    
     ),
      # Popup-Fenster
      dbc.Modal(
@@ -162,7 +185,7 @@ app.layout = html.Div([
         id="modal",
     ),
     dcc.Tabs(id="tabs", children=[
-        dcc.Tab(label='Balken- und Liniendiagramm', children=[
+        dcc.Tab(label='Balken- und Liniendiagramme', children=[
             html.Div([
                 html.Div([
                     dcc.Graph(id='graph1', figure=fig1),
@@ -173,7 +196,7 @@ app.layout = html.Div([
                 ], style={'display': 'flex', 'justify-content': 'center'})
             ]),
         ]),
-        dcc.Tab(label='Karte | Openstreetmap', children=[
+        dcc.Tab(label='Karte', children=[
             dcc.Graph(id='graph4', figure=fig4)
         ]),
     ]),
