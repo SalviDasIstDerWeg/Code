@@ -10,7 +10,7 @@
 # Kurs: Dashboard Design, MScUED&DV-WPF-FS23
 # Aufgabe: Finales Dashboard (Dashboard erstellen)
 # Abgabedatum: 01.07.2023
-# Version: v1.7.1 no-release-2023-06-26
+# Version: v1.8 no-release-2023-06-26
 # ----------------------------------------------
 
 import pandas as pd
@@ -121,8 +121,30 @@ fig3.update_layout(
 
 # Interaktive Karte (fig4): Diagramm
 
-fig4 = px.scatter_mapbox(df2, lat="lat", lon="lon", color="Nutzung", size="Nutzung",
-                  color_continuous_scale=px.colors.cyclical.IceFire, size_max=15, zoom=6)
+# Callback - fig4
+@app.callback(Output("graph4", "figure"), Input("color_fig4", "value"))
+
+def update_graph4(dropdown_value_color):
+    fig4 = px.scatter_mapbox(df2, lat="lat", lon="lon", color="Nutzung", size="Nutzung", color_continuous_scale=dropdown_value_color, size_max=15, zoom=6)
+    
+    fig4.update_layout(
+        font=dict(color='#FFFFFF'),
+        mapbox_style="open-street-map",
+        title_text="Einfluss der Nähe von Sehenswürdigkeiten auf die Fahrgastnutzung",
+        title_x=0.52,
+        title_y=0.95,
+        legend=dict(title="Nutzungsintensität"),
+        paper_bgcolor='#064D5C',   # Farbe Aussenbereich
+        height=600
+        )
+    
+    fig4.update_geos(center=dict(lon=8.2275, lat=46.8182))
+    
+    return fig4
+
+'''
+#fig4 = px.scatter_mapbox(df2, lat="lat", lon="lon", color="Nutzung", size="Nutzung",
+                 # color_continuous_scale=px.colors.cyclical.IceFire, size_max=15, zoom=6)
 
 fig4.update_layout(
     font=dict(color='#FFFFFF'),
@@ -136,7 +158,7 @@ fig4.update_layout(
     )
 
 fig4.update_geos(center=dict(lon=8.2275, lat=46.8182))
-
+'''
 
 # Popup Fenster: Daten für die Tabelle
 data = {'Name': ['\u2211 Attributwerte', '\u2211 Attribute', 'Attributnamen'], 'Wert': [131010, 30, 'anteil_eigentum, b_jahr, bauart...']}
@@ -198,7 +220,12 @@ app.layout = html.Div(
             ]),
         ]),
         dcc.Tab(label='Karte', children=[
-            dcc.Graph(id='graph4', figure=fig4)
+            dbc.Row(html.Div([dbc.Label("Bitte gewünschtes Farbschema auswählen:", html_for="color_fig4", style={'color': '#FFFFFF', 'margin-top': '20px'}),
+                    dcc.Dropdown(options=["Inferno", "Viridis", "Plasma"], value='Viridis', id='color_fig4', multi=False)],
+                             style={'width': '400px', 'margin-left': '100px'}), align='center'),
+            dbc.Row([dcc.Graph(id='graph4',
+                               #figure=fig4
+                               )])
         ]),
     ]),
 ])
