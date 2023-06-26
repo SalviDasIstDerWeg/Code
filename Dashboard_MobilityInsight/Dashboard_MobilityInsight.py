@@ -10,7 +10,7 @@
 # Kurs: Dashboard Design, MScUED&DV-WPF-FS23
 # Aufgabe: Finales Dashboard (Dashboard erstellen)
 # Abgabedatum: 01.07.2023
-# Version: v1.6 release-pya-1-2023-06-24
+# Version: v1.7.1 no-release-2023-06-26
 # ----------------------------------------------
 
 import pandas as pd
@@ -54,6 +54,8 @@ fig1.update_layout(
     barmode='group',
     font=dict(color='#FFFFFF'),
     title_text='Anzahl der Rampen und Treppen in Abhängigkeit vom Baujahr',
+    title_x=0.82,
+    title_y=0.95,
     xaxis_title="Baujahr",
     yaxis_title="Anzahl",
     legend=dict(title="Typ"),
@@ -80,7 +82,9 @@ fig2.add_trace(go.Scatter(x=dff_group["b_jahr"], y=dff_group["lange_m"],
 # Liniendiagramm (fig2): Achsenbeschriftungen und Titel hinzufügen
 fig2.update_layout(
     font=dict(color='#FFFFFF'),
-    title='Durchschnittliche Breite und Länge von Treppen und Rampen', 
+    title_text='Durchschnittliche Breite und Länge von Treppen und Rampen', 
+    title_x=0.48,
+    title_y=0.87,
     xaxis_title='Baujahr',
     yaxis_title='Durchschnittliche Breite und Länge',
     paper_bgcolor='#064D5C'   # Farbe Aussenbereich
@@ -106,6 +110,8 @@ fig3.update_layout(
     barmode='group',
     font=dict(color='#FFFFFF'),
     title_text='Anzahl der Zugänge nach Steigung und Handlaufpräsenz',
+    title_x=0.82,
+    title_y=0.95,
     xaxis_title="Steigung in Cluster",
     yaxis_title="Anzahl Zugänge",
     legend=dict(title="Handlauftyp"),
@@ -121,7 +127,9 @@ fig4 = px.scatter_mapbox(df2, lat="lat", lon="lon", color="Nutzung", size="Nutzu
 fig4.update_layout(
     font=dict(color='#FFFFFF'),
     mapbox_style="open-street-map",
-    title="Einfluss der Nähe von Sehenswürdigkeiten auf die Fahrgastnutzung",
+    title_text="Einfluss der Nähe von Sehenswürdigkeiten auf die Fahrgastnutzung",
+    title_x=0.52,
+    title_y=0.95,
     legend=dict(title="Nutzungsintensität"),
     paper_bgcolor='#064D5C',   # Farbe Aussenbereich
     height=600
@@ -144,7 +152,7 @@ app.layout = html.Div(
             html.Div(
                 children=[
                     html.Img(src="/assets/logo2.svg", style={'height':'70px', 'width':'auto', 'margin-left':'20px', 'margin-top':'20px'}),
-                    html.H1("Dashboard - Mobility Insight", style={'color': '#FFFFFF'}),
+                    html.H1("Dashboard - Mobility Insight", style={'color': '#FFFFFF', 'margin-top': '0'}),
                     dbc.Button(
                         html.Img(src="/assets/info2.svg", style={'height':'30px', 'width':'auto'}), id="open", 
                         style={'background-color': '#FFFFFF', 'border-color': '#FFFFFF' }) # Verändert die Farbe des kompletten Buttons
@@ -153,7 +161,7 @@ app.layout = html.Div(
             ),
             html.Div(
                 children=[
-                    html.H3("Andrea Zimmermann · Irene Antolín Pérez · Philipp Michtner · Salvatore Russo · Sophie Pilz", style={'fontSize': '0.8em', 'textAlign': 'center', 'color': '#FFFFFF', 'background-color': '#064D5C', 'margin-bottom':'5px'}),
+                    html.H3("Andrea Zimmermann · Irene Antolín Pérez · Philipp Michtner · Salvatore Russo · Sophie Pilz", style={'fontSize': '0.8em', 'textAlign': 'center', 'color': '#FFFFFF', 'background-color': '#064D5C', 'margin-left': '68px'}),
                 ]
             )
         ]
@@ -185,7 +193,7 @@ app.layout = html.Div(
                     dcc.Graph(id='graph2', figure=fig2),
                 ], style={'display': 'flex', 'justify-content': 'center'}),
                 html.Div([
-                    dcc.Graph(id='graph3', figure=fig3)
+                    dcc.Graph(id='graph3', figure=fig3),
                 ], style={'display': 'flex', 'justify-content': 'center'})
             ]),
         ]),
