@@ -10,7 +10,7 @@
 # Kurs: Dashboard Design, MScUED&DV-WPF-FS23
 # Aufgabe: Finales Dashboard (Dashboard erstellen)
 # Abgabedatum: 01.07.2023
-# Version: v1.8.1 no-release-2023-06-26
+# Version: v1.9.2 no-release-2023-06-26
 # ----------------------------------------------
 
 import pandas as pd
@@ -43,7 +43,6 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 
 # Balkendiagramm 1 (fig1): Diagramm
-
 fig1 = px.histogram(dff_fltrd1, x="b_jahr",
              color='typ', barmode='group',
              # height=400
@@ -65,7 +64,6 @@ fig1.update_layout(
 
 
 # Liniendiagramm (fig2): Diagramm
-
 #Nach Jahr gruppierter Datensatz - as_index=False, da die Spalte b_jahr weiterhin als Spalte verfügbar sein soll
 dff_group = dff_fltrd1.groupby(['b_jahr'], as_index=False)[['breite', 'lange_m']].mean()
 #print(df_group)
@@ -79,7 +77,7 @@ fig2.add_trace(go.Scatter(x=dff_group["b_jahr"], y=dff_group["lange_m"],
                     mode='lines',
                     name='Länge'))
 
-# Liniendiagramm (fig2): Achsenbeschriftungen und Titel hinzufügen
+# Liniendiagramm (fig2): Layout
 fig2.update_layout(
     font=dict(color='#FFFFFF'),
     title_text='Durchschnittliche Breite und Länge von Treppen und Rampen', 
@@ -92,7 +90,6 @@ fig2.update_layout(
 
 
 # Balkendiagramm 2 (fig3): Diagramm
-
 # Bins & Labels für Clustering
 bins = [0, 5, 10, 15, 20]
 labels = ["0-5%", "6-10%", "11-15%", "16-20%"]
@@ -105,7 +102,7 @@ category_orders = {"steigung_cluster": labels}
 
 fig3 = px.histogram(dff_fltrd2, x="steigung_cluster", color="handlauf", barmode="group", category_orders=category_orders)
 
-# Balkendiagramm 2 (fig3): Layout anpassen
+# Balkendiagramm 2 (fig3): Layout
 fig3.update_layout(
     barmode='group',
     font=dict(color='#FFFFFF'),
@@ -119,9 +116,7 @@ fig3.update_layout(
 )
 
 
-# Interaktive Karte (fig4): Diagramm
-
-# Callback - fig4
+# Interaktive Karte (fig4): Diagramm & Layout - inkl. Callback
 @app.callback(Output("graph4", "figure"), Input("color_fig4", "value"))
 
 def update_graph4(dropdown_value_color):
@@ -144,8 +139,11 @@ def update_graph4(dropdown_value_color):
 
 
 # Popup Fenster: Daten für die Tabelle
-data = {'Name': ['\u2211 Attributwerte', '\u2211 Attribute', 'Attributnamen'], 'Wert': [131010, 30, 'anteil_eigentum, b_jahr, bauart...']}
+data = {'Name': ['\u2211 Attributwerte', '\u2211 Attribute', 'Attributnamen'], 'Wert': ['131,010', 30, 'anteil_eigentum, b_jahr, bauart...']}
 df_table = pd.DataFrame(data)
+
+data2 = {'Name': ['\u2211 Attributwerte', '\u2211 Attribute', 'Attributnamen'], 'Wert': [45, 5, 'Haltestelle, lat, lon, Nutzung...']}
+df2_table = pd.DataFrame(data2)
 
 # Layoutelemente für das Dashboard 
 app.layout = html.Div(
@@ -172,16 +170,22 @@ app.layout = html.Div(
         ]
     
     ),
-     # Popup-Fenster
+     # Popup-Fenster (erweitert)
      dbc.Modal(
         [
             dbc.ModalHeader("Informationen zum Datensatz"),
             dbc.ModalBody([
-                "Datenquelle: rampe-treppe.json",
+                "Datenquelle 1: rampe-treppe.json",
                 dash_table.DataTable(
                     id='table',
                     columns=[{"name": i, "id": i} for i in df_table.columns],
                     data=df_table.to_dict('records'),
+                ),
+                "Datenquelle 2: nutzung-ber.csv",
+                dash_table.DataTable(
+                    id='table2',
+                    columns=[{"name": i, "id": i} for i in df2_table.columns],
+                    data=df2_table.to_dict('records'),
                 ),
             ]),
             dbc.ModalFooter(
