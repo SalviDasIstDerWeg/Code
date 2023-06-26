@@ -10,7 +10,7 @@
 # Kurs: Dashboard Design, MScUED&DV-WPF-FS23
 # Aufgabe: Finales Dashboard (Dashboard erstellen)
 # Abgabedatum: 01.07.2023
-# Version: v1.8 no-release-2023-06-26
+# Version: v1.8.1 no-release-2023-06-26
 # ----------------------------------------------
 
 import pandas as pd
@@ -142,23 +142,6 @@ def update_graph4(dropdown_value_color):
     
     return fig4
 
-'''
-#fig4 = px.scatter_mapbox(df2, lat="lat", lon="lon", color="Nutzung", size="Nutzung",
-                 # color_continuous_scale=px.colors.cyclical.IceFire, size_max=15, zoom=6)
-
-fig4.update_layout(
-    font=dict(color='#FFFFFF'),
-    mapbox_style="open-street-map",
-    title_text="Einfluss der Nähe von Sehenswürdigkeiten auf die Fahrgastnutzung",
-    title_x=0.52,
-    title_y=0.95,
-    legend=dict(title="Nutzungsintensität"),
-    paper_bgcolor='#064D5C',   # Farbe Aussenbereich
-    height=600
-    )
-
-fig4.update_geos(center=dict(lon=8.2275, lat=46.8182))
-'''
 
 # Popup Fenster: Daten für die Tabelle
 data = {'Name': ['\u2211 Attributwerte', '\u2211 Attribute', 'Attributnamen'], 'Wert': [131010, 30, 'anteil_eigentum, b_jahr, bauart...']}
