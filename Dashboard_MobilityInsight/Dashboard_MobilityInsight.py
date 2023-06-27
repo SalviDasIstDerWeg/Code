@@ -10,7 +10,7 @@
 # Kurs: Dashboard Design, MScUED&DV-WPF-FS23
 # Aufgabe: Finales Dashboard (Dashboard erstellen)
 # Abgabedatum: 01.07.2023
-# Version: v1.9.2 no-release-2023-06-26
+# Version: v2.0 no-release-2023-06-27
 # ----------------------------------------------
 
 import pandas as pd
@@ -64,7 +64,7 @@ fig1.update_layout(
 
 
 # Liniendiagramm (fig2): Diagramm
-#Nach Jahr gruppierter Datensatz - as_index=False, da die Spalte b_jahr weiterhin als Spalte verfügbar sein soll
+# Nach Jahr gruppierter Datensatz - as_index=False, da die Spalte b_jahr weiterhin als Spalte verfügbar sein soll
 dff_group = dff_fltrd1.groupby(['b_jahr'], as_index=False)[['breite', 'lange_m']].mean()
 #print(df_group)
 
@@ -89,7 +89,7 @@ fig2.update_layout(
     )
 
 
-# Balkendiagramm 2 (fig3): Diagramm
+# Balkendiagramm 2 (fig3): Diagramm - inkl. Callback
 # Bins & Labels für Clustering
 bins = [0, 5, 10, 15, 20]
 labels = ["0-5%", "6-10%", "11-15%", "16-20%"]
@@ -100,20 +100,26 @@ dff_fltrd2["steigung_cluster"] = pd.cut(dff_fltrd2["steigung"], bins=bins, label
 # Definition der korrekten Cluster-Reihenfolge im Diagramm - nach "labels"
 category_orders = {"steigung_cluster": labels}
 
-fig3 = px.histogram(dff_fltrd2, x="steigung_cluster", color="handlauf", barmode="group", category_orders=category_orders)
+@app.callback(Output("graph3", "figure"), Input("checklist_fig3", "value"))
 
-# Balkendiagramm 2 (fig3): Layout
-fig3.update_layout(
-    barmode='group',
-    font=dict(color='#FFFFFF'),
-    title_text='Anzahl der Zugänge nach Steigung und Handlaufpräsenz',
-    title_x=0.82,
-    title_y=0.95,
-    xaxis_title="Steigung in Cluster",
-    yaxis_title="Anzahl Zugänge",
-    legend=dict(title="Handlauftyp"),
-    paper_bgcolor='#064D5C'   # Farbe Aussenbereich
-)
+def update_graph3(selected_clusters):
+    dff_fltrd3 = dff_fltrd2[dff_fltrd2["steigung_cluster"].isin(selected_clusters)]
+
+    fig3 = px.histogram(dff_fltrd3, x="steigung_cluster", color="handlauf", barmode="group", category_orders=category_orders)
+
+    fig3.update_layout(
+        barmode='group',
+        font=dict(color='#FFFFFF'),
+        title_text='Anzahl der Zugänge nach Steigung und Handlaufpräsenz',
+        title_x=0.82,
+        title_y=0.95,
+        xaxis_title="Steigung in Cluster",
+        yaxis_title="Anzahl Zugänge",
+        legend=dict(title="Handlauftyp"),
+        paper_bgcolor='#064D5C'   # Farbe Aussenbereich
+    )
+
+    return fig3
 
 
 # Interaktive Karte (fig4): Diagramm & Layout - inkl. Callback
@@ -202,17 +208,19 @@ app.layout = html.Div(
                     dcc.Graph(id='graph2', figure=fig2),
                 ], style={'display': 'flex', 'justify-content': 'center'}),
                 html.Div([
-                    dcc.Graph(id='graph3', figure=fig3),
-                ], style={'display': 'flex', 'justify-content': 'center'})
+                    dbc.Row(style={'margin-top': '150px'},
+                    children=[
+                        dbc.Col(html.P("Bitte Steigung-Cluster auswählen:", style={'margin-right': '10px', 'color': '#FFFFFF'})),
+                        dbc.Col(dcc.Checklist(options=[{"label": cluster_label, "value": cluster_label}
+                                            for cluster_label in labels], value=["6-10%"], id="checklist_fig3", labelStyle={"display": "inline-block", "margin-right": "10px", 'color': '#FFFFFF'},))]),
+                    dbc.Row([dbc.Col(dcc.Graph(id='graph3'))]),], style={'display': 'flex', 'justify-content': 'center'})
             ]),
         ]),
         dcc.Tab(label='Karte', children=[
             dbc.Row(html.Div([dbc.Label("Bitte gewünschtes Farbschema auswählen:", html_for="color_fig4", style={'color': '#FFFFFF', 'margin-top': '20px'}),
                     dcc.Dropdown(options=["Inferno", "Viridis", "Plasma"], value='Viridis', id='color_fig4', multi=False)],
                              style={'width': '400px', 'margin-left': '100px'}), align='center'),
-            dbc.Row([dcc.Graph(id='graph4',
-                               #figure=fig4
-                               )])
+            dbc.Row([dcc.Graph(id='graph4')])
         ]),
     ]),
 ])
