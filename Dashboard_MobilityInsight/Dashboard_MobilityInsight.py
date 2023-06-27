@@ -10,7 +10,7 @@
 # Kurs: Dashboard Design, MScUED&DV-WPF-FS23
 # Aufgabe: Finales Dashboard (Dashboard erstellen)
 # Abgabedatum: 01.07.2023
-# Version: v2.0 no-release-2023-06-27
+# Version: v2.0.1 release-pya-2-2023-06-27
 # ----------------------------------------------
 
 import pandas as pd
@@ -210,9 +210,9 @@ app.layout = html.Div(
                 html.Div([
                     dbc.Row(style={'margin-top': '150px'},
                     children=[
-                        dbc.Col(html.P("Bitte Steigung-Cluster auswählen:", style={'margin-right': '10px', 'color': '#FFFFFF'})),
+                        dbc.Col(html.P("Bitte gewünschte(n) Steigung-Cluster auswählen:", style={'margin-right': '10px', 'color': '#FFFFFF'})),
                         dbc.Col(dcc.Checklist(options=[{"label": cluster_label, "value": cluster_label}
-                                            for cluster_label in labels], value=["6-10%"], id="checklist_fig3", labelStyle={"display": "inline-block", "margin-right": "10px", 'color': '#FFFFFF'},))]),
+                                            for cluster_label in labels], value=["6-10%"], id="checklist_fig3", labelStyle={"display": "block", "margin-right": "10px", 'color': '#FFFFFF'},))]),
                     dbc.Row([dbc.Col(dcc.Graph(id='graph3'))]),], style={'display': 'flex', 'justify-content': 'center'})
             ]),
         ]),
