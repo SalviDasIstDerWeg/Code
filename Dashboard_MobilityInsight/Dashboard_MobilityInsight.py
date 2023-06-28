@@ -10,7 +10,7 @@
 # Kurs: Dashboard Design, MScUED&DV-WPF-FS23
 # Aufgabe: Finales Dashboard (Dashboard erstellen)
 # Abgabedatum: 01.07.2023
-# Version: v2.0.1 release-pya-2-2023-06-27
+# Version: v2.0.2 release-pya-2-2023-06-28
 # ----------------------------------------------
 
 import pandas as pd
@@ -201,7 +201,7 @@ app.layout = html.Div(
         id="modal",
     ),
     dcc.Tabs(id="tabs", children=[
-        dcc.Tab(label='Balken- und Liniendiagramme', children=[
+        dcc.Tab(label='Rampen & Treppen', children=[
             html.Div([
                 html.Div([
                     dcc.Graph(id='graph1', figure=fig1),
@@ -216,7 +216,7 @@ app.layout = html.Div(
                     dbc.Row([dbc.Col(dcc.Graph(id='graph3'))]),], style={'display': 'flex', 'justify-content': 'center'})
             ]),
         ]),
-        dcc.Tab(label='Karte', children=[
+        dcc.Tab(label='Nutzungsintensität (Karte)', children=[
             dbc.Row(html.Div([dbc.Label("Bitte gewünschtes Farbschema auswählen:", html_for="color_fig4", style={'color': '#FFFFFF', 'margin-top': '20px'}),
                     dcc.Dropdown(options=["Inferno", "Viridis", "Plasma"], value='Viridis', id='color_fig4', multi=False)],
                              style={'width': '400px', 'margin-left': '100px'}), align='center'),
