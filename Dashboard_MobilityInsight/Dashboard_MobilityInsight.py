@@ -10,7 +10,7 @@
 # Kurs: Dashboard Design, MScUED&DV-WPF-FS23
 # Aufgabe: Finales Dashboard (Dashboard erstellen)
 # Abgabedatum: 01.07.2023
-# Version: v2.0.4 final-release-pya-3-2023-06-29
+# Version: v2.0.5 final-internal-release-2023-06-29
 # ----------------------------------------------
 
 import pandas as pd
@@ -40,6 +40,7 @@ dff_fltrd2 = dff_fltrd2[dff_fltrd2["handlauf"].isin(handlauf_values)] # Filtern 
 
 # Anwendung erstellen
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app.title = "Mobility Insight Dashboard"
 
 
 # Balkendiagramm 1 (fig1): Diagramm
@@ -159,7 +160,7 @@ app.layout = html.Div(
             html.Div(
                 children=[
                     html.Img(src="/assets/logo2.svg", style={'height':'70px', 'width':'auto', 'margin-left':'20px', 'margin-top':'20px'}),
-                    html.H1("Dashboard - Mobility Insight", style={'color': '#FFFFFF', 'margin-top': '0'}),
+                    html.H1("Mobility Insight Dashboard", style={'color': '#FFFFFF', 'margin-top': '0'}),
                     dbc.Button(
                         html.Img(src="/assets/info2.svg", style={'height':'30px', 'width':'auto'}), id="open", 
                         style={'background-color': '#FFFFFF', 'border-color': '#FFFFFF' }) # Verändert die Farbe des kompletten Buttons
