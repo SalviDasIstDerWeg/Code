@@ -10,7 +10,7 @@
 # Kurs: Dashboard Design, MScUED&DV-WPF-FS23
 # Aufgabe: Finales Dashboard (Dashboard erstellen)
 # Abgabedatum: 01.07.2023
-# Version: v2.0.2 release-pya-2-2023-06-28
+# Version: v2.0.3 final-release-pya-3-2023-06-29
 # ----------------------------------------------
 
 import pandas as pd
@@ -45,7 +45,6 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 # Balkendiagramm 1 (fig1): Diagramm
 fig1 = px.histogram(dff_fltrd1, x="b_jahr",
              color='typ', barmode='group',
-             # height=400
              )
 
 # Balkendiagramm 1 (fig1): Layout
@@ -58,7 +57,6 @@ fig1.update_layout(
     xaxis_title="Baujahr",
     yaxis_title="Anzahl",
     legend=dict(title="Typ"),
-    #plot_bgcolor='#064D5C',  # Farbe Innenbereich
     paper_bgcolor='#064D5C'   # Farbe Aussenbereich
 )
 
@@ -89,7 +87,7 @@ fig2.update_layout(
     )
 
 
-# Balkendiagramm 2 (fig3): Diagramm - inkl. Callback
+# Balkendiagramm 2 (fig3): Diagramm & Layout - inkl. Callback
 # Bins & Labels für Clustering
 bins = [0, 5, 10, 15, 20]
 labels = ["0-5%", "6-10%", "11-15%", "16-20%"]
@@ -139,16 +137,16 @@ def update_graph4(dropdown_value_color):
         height=600
         )
     
-    fig4.update_geos(center=dict(lon=8.2275, lat=46.8182))
+    fig4.update_geos(center=dict(lon=8.2275, lat=46.8182)) # Ändert die Standardansicht auf den ungefähren geographischen Mittelpunkt der Schweiz
     
     return fig4
 
 
 # Popup Fenster: Daten für die Tabelle
-data = {'Name': ['\u2211 Attributwerte', '\u2211 Attribute', 'Attributnamen'], 'Wert': ['131,010', 30, 'anteil_eigentum, b_jahr, bauart...']}
+data = {'Name': ['\u2211 Attributwerte', '\u2211 Attribute', 'Attributnamen'], 'Wert': ['131,010', 30, 'anteil_eigentum, b_jahr, bauart...']} # Werte für Datensatz 1
 df_table = pd.DataFrame(data)
 
-data2 = {'Name': ['\u2211 Attributwerte', '\u2211 Attribute', 'Attributnamen'], 'Wert': [45, 5, 'Haltestelle, lat, lon, Nutzung...']}
+data2 = {'Name': ['\u2211 Attributwerte', '\u2211 Attribute', 'Attributnamen'], 'Wert': [45, 5, 'Haltestelle, lat, lon, Nutzung...']} # Werte für Datensatz 2
 df2_table = pd.DataFrame(data2)
 
 # Layoutelemente für das Dashboard 
